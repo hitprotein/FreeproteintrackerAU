@@ -1,7 +1,8 @@
 """
 Import everyday Australian foods from the FSANZ Australian Food Composition Database (Release 3).
 
-1. Download "AFCD Release 3 - Nutrient profiles.xlsx" from foodstandards.gov.au (FSANZ licence: based on
+1. Download "AFCD Release 3 - Nutrient profiles.xlsx" from
+   https://www.foodstandards.gov.au/science-data/food-nutrient-databases/afcd/data-files (FSANZ licence: based on
    CC BY-SA, so credit FSANZ and share any redistributed version of the data under the same terms).
 2. Put it in ./afcd/
 3. pip install pandas openpyxl && python scripts/import-afcd.py
