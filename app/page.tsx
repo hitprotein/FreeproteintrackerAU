@@ -20,8 +20,8 @@ export default function Home() {
             How much protein is in the food you <span className="text-euc">actually eat?</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg text-ivory/70">
-            Protein, calories and kilojoules for Australian takeaway, straight from each chain&apos;s published figures.
-            Add anything to a free daily tracker.
+            Protein, calories and kilojoules for Australian takeaway and everyday foods, straight from each chain&apos;s
+            published figures and the official Australian food database. Add anything to a free daily tracker.
           </p>
           <div className="mt-8"><SearchBox /></div>
         </div>
