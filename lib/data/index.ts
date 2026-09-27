@@ -89,7 +89,7 @@ export const CHAINS: Chain[] = [
 export const FOODS: Food[] = afcdFoods;
 export const AFCD_SOURCE = {
   label: "FSANZ Australian Food Composition Database, Release 3",
-  url: "https://www.foodstandards.gov.au/",
+  url: "https://www.foodstandards.gov.au/science-data/food-nutrient-databases/afcd/data-files",
   checked: "2026-09-27",
 };
 
