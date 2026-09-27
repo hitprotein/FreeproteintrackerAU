@@ -32,7 +32,7 @@ export default function SearchBox() {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder={`Try "Big Mac" or "GYG burrito"`}
+          placeholder={`Try "Big Mac" or "chicken breast"`}
           autoComplete="off"
           className="w-full rounded-2xl border border-ivory/15 bg-ivory/[0.06] py-4 pl-14 pr-4 text-lg text-ivory placeholder:text-ivory/40 focus:border-euc focus:outline-none"
         />
