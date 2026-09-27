@@ -4,7 +4,7 @@ import { ALL_ITEMS, CHAINS, type MenuItem } from "./data";
 const SYNONYMS: Record<string, string> = {
   maccas: "mcdonalds", macca: "mcdonalds", "macca's": "mcdonalds", "mcdonald's": "mcdonalds",
   hj: "hungry jacks", hjs: "hungry jacks", "nando's": "nandos", brekky: "brekkie", breakfast: "brekkie",
-  chook: "chicken", snag: "sausage",
+  chook: "chicken", "grill'd": "grilld", grill: "grilld", snag: "sausage",
 };
 
 const norm = (s: string) =>

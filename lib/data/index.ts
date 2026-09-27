@@ -3,6 +3,7 @@ import { nandosItems } from "./nandos";
 import { mcdonaldsItems } from "./mcdonalds";
 import { subwayItems } from "./subway";
 import { kfcItems } from "./kfc";
+import { grilldItems } from "./grilld";
 import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
 
 export * from "./types";
@@ -31,6 +32,14 @@ export const CHAINS: Chain[] = [
       checked: "2026-09-27",
     },
     variantNote: "KFC publishes kilojoules; Calories are converted from them. KFC's guide states its information is correct as at September 2023. Limited-time items aren't included.",
+  },
+  {
+    slug: "grilld",
+    name: "Grill'd",
+    aliases: ["grilld", "grill d", "grill'd"],
+    blurb: "Burgers, wraps, salads and Healthy Fried Chicken, as Grill'd publishes them. Burgers are on their default bun.",
+    source: { label: "Grill'd online menu nutrition panels", url: "https://grilld.com.au/menu", checked: "2026-09-27" },
+    variantNote: "Burgers are shown on Grill'd's default bun (usually Panini). A different bun changes the figures. Grill'd publishes kilojoules; Calories are converted from them.",
   },
   {
     slug: "subway",
@@ -66,9 +75,9 @@ export const CHAINS: Chain[] = [
   },
 ];
 
-export const COMING_SOON = ["Grill'd", "Red Rooster"];
+export const COMING_SOON = ["Red Rooster"];
 
-export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...subwayItems, ...gygItems, ...nandosItems];
+export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...grilldItems, ...subwayItems, ...gygItems, ...nandosItems];
 
 export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug);
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);
