@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Plus, RotateCcw, X } from "lucide-react";
+import { Minus, Plus, RotateCcw, X } from "lucide-react";
 import { searchWithFoods } from "@/lib/search";
 import { sourceName, trackerName } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
-import { MEALS, TRACKER_EVENT, addEntry, loadTracker, mealForNow, saveTracker, type Meal, type TrackerState } from "@/lib/tracker-storage";
+import { MEALS, QTY_MAX, QTY_STEP, TRACKER_EVENT, addEntry, entryKcal, entryProtein, loadTracker, mealForNow, saveTracker, type Entry, type Meal, type TrackerState } from "@/lib/tracker-storage";
 import CtaButton from "./CtaButton";
 
 export default function Tracker() {
@@ -24,12 +24,16 @@ export default function Tracker() {
     return () => { window.removeEventListener(TRACKER_EVENT, sync); window.removeEventListener("storage", sync); };
   }, []);
 
-  const total = Math.round(state.entries.reduce((s, e) => s + e.protein, 0) * 10) / 10;
+  const total = Math.round(state.entries.reduce((s, e) => s + entryProtein(e), 0) * 10) / 10;
+  const totalKcal = state.entries.reduce((s, e) => s + (entryKcal(e) ?? 0), 0);
+  const missingKcal = state.entries.some((e) => e.kcal === undefined); // quick adds have no Calories
   const remaining = Math.max(0, Math.round((state.target - total) * 10) / 10);
   const pct = state.target > 0 ? Math.min(100, (total / state.target) * 100) : 0;
   const results = useMemo(() => searchWithFoods(q, 6), [q]);
 
   const update = (next: TrackerState) => { setState(next); saveTracker(next); };
+  const setQty = (e: Entry, qty: number) =>
+    update({ ...state, entries: state.entries.map((x) => (x.id === e.id ? { ...x, qty: Math.min(QTY_MAX, Math.max(QTY_STEP, qty)) } : x)) });
 
   return (
     <div className="rounded-3xl border border-line bg-white p-5 shadow-sm sm:p-8">
@@ -50,6 +54,10 @@ export default function Tracker() {
           />
         </label>
       </div>
+
+      <p className="tabular mt-2 text-sm text-ink/55">
+        {ready ? totalKcal.toLocaleString("en-AU") : 0} Cal{ready && missingKcal && " (excl. quick adds)"}
+      </p>
 
       <div className="mt-5 h-3 overflow-hidden rounded-full bg-ink/5">
         <div className="h-full rounded-full bg-euc-deep transition-all" style={{ width: `${pct}%` }} />
@@ -111,9 +119,21 @@ export default function Tracker() {
               <ul className="mt-1">
                 {state.entries.filter((e) => e.meal === m).map((e) => (
                   <li key={e.id} className="flex items-center justify-between gap-3 border-b border-line py-2 text-sm last:border-0">
-                    <span className="min-w-0 truncate">{e.name}</span>
+                    <span className="min-w-0">
+                      <span className="block truncate">{e.name}</span>
+                      {entryKcal(e) !== undefined && <span className="tabular text-xs text-ink/45">{entryKcal(e)} Cal</span>}
+                    </span>
                     <span className="flex shrink-0 items-center gap-3">
-                      <span className="tabular font-semibold">{e.protein}g</span>
+                      <span className="flex items-center rounded-full border border-line">
+                        <button type="button" aria-label={`Less ${e.name}`} disabled={(e.qty ?? 1) <= QTY_STEP}
+                          onClick={() => setQty(e, (e.qty ?? 1) - QTY_STEP)}
+                          className="p-1.5 text-ink/50 hover:text-ink disabled:opacity-30"><Minus className="h-3.5 w-3.5" /></button>
+                        <span className="tabular w-8 text-center text-xs font-semibold">×{e.qty ?? 1}</span>
+                        <button type="button" aria-label={`More ${e.name}`} disabled={(e.qty ?? 1) >= QTY_MAX}
+                          onClick={() => setQty(e, (e.qty ?? 1) + QTY_STEP)}
+                          className="p-1.5 text-ink/50 hover:text-ink disabled:opacity-30"><Plus className="h-3.5 w-3.5" /></button>
+                      </span>
+                      <span className="tabular w-12 text-right font-semibold">{entryProtein(e)}g</span>
                       <button type="button" aria-label={`Remove ${e.name}`} onClick={() => update({ ...state, entries: state.entries.filter((x) => x.id !== e.id) })}
                         className="text-ink/30 hover:text-ink"><X className="h-4 w-4" /></button>
                     </span>
