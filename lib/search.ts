@@ -1,4 +1,4 @@
-import { ALL_ITEMS, CHAINS, type MenuItem } from "./data";
+import { ALL_ITEMS, CHAINS, FOODS, type Food, type MenuItem } from "./data";
 
 // Aussie shorthand → canonical words, applied to the query before matching.
 const SYNONYMS: Record<string, string> = {
@@ -21,19 +21,27 @@ function editDistanceAtMost1(a: string, b: string) {
   return edits + (a.length - i) + (b.length - j) <= 1;
 }
 
+type Entry<T> = { item: T; text: string; words: string[]; name: string };
+const entry = <T extends { name: string }>(item: T, extra: string[]): Entry<T> => {
+  const text = norm([item.name, ...extra].join(" "));
+  return { item, text, words: text.split(" "), name: norm(item.name) };
+};
+
 const INDEX = ALL_ITEMS.map((item) => {
   const chain = CHAINS.find((c) => c.slug === item.chain)!;
-  const text = norm([item.name, item.category, chain.name, ...chain.aliases].join(" "));
-  return { item, text, words: text.split(" "), name: norm(item.name) };
+  return entry(item, [item.category, chain.name, ...chain.aliases]);
 });
+// Category left out: "Eggs & dairy" would make "eggs" match every dairy food.
+const FOOD_INDEX = FOODS.map((f) => entry(f, ["everyday food", ...(f.aliases ?? [])]));
+const INDEX_WITH_FOODS: Entry<MenuItem | Food>[] = [...INDEX, ...FOOD_INDEX];
 
 /** Every query word must match (exactly, as a prefix, or within one typo). Ranked by match quality, then protein. */
-export function searchItems(query: string, limit = 12): MenuItem[] {
+function search<T extends { protein: number }>(index: Entry<T>[], query: string, limit: number): T[] {
   const tokens = norm(query).split(" ").filter(Boolean).map((t) => norm(SYNONYMS[t] ?? t)).join(" ").split(" ");
   if (!tokens.length || !tokens[0]) return [];
-  const scored: { item: MenuItem; score: number }[] = [];
+  const scored: { item: T; score: number }[] = [];
   const phrase = tokens.join(" ");
-  for (const { item, text, words, name } of INDEX) {
+  for (const { item, text, words, name } of index) {
     let score = 0;
     let ok = true;
     for (const t of tokens) {
@@ -51,3 +59,10 @@ export function searchItems(query: string, limit = 12): MenuItem[] {
   }
   return scored.sort((a, b) => b.score - a.score || b.item.protein - a.item.protein).slice(0, limit).map((s) => s.item);
 }
+
+/** Takeaway menu items only (compare tool). */
+export const searchItems = (query: string, limit = 12): MenuItem[] => search(INDEX, query, limit);
+
+/** Takeaway menu items plus everyday foods (search box and tracker). */
+export const searchWithFoods = (query: string, limit = 12): (MenuItem | Food)[] =>
+  search(INDEX_WITH_FOODS, query, limit);

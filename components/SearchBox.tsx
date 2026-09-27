@@ -3,16 +3,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { searchItems } from "@/lib/search";
-import { CHAINS, chainName, density, itemHref } from "@/lib/data";
+import { searchWithFoods } from "@/lib/search";
+import { CHAINS, density, isFood, itemHref, nutrientLine, sourceName, trackerName } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 import AddToTracker from "./AddToTracker";
 
-const EXAMPLES = ["Big Mac", "GYG chicken burrito", "Nando's half chicken", "McMuffin", "tenders"];
+const EXAMPLES = ["Big Mac", "GYG chicken burrito", "Nando's half chicken", "McMuffin", "chicken breast", "Weet-Bix"];
 
 export default function SearchBox() {
   const [q, setQ] = useState("");
-  const results = useMemo(() => searchItems(q, 8), [q]);
+  const results = useMemo(() => searchWithFoods(q, 8), [q]);
   const timer = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
@@ -53,25 +53,34 @@ export default function SearchBox() {
         <ul className="mt-3 divide-y divide-ivory/10 overflow-hidden rounded-2xl border border-ivory/10 bg-ink/60 text-left">
           {results.length === 0 && (
             <li className="px-5 py-4 text-sm text-ivory/60">
-              No match yet. We currently cover {CHAINS.map((c) => c.name).join(", ")}, with more chains on the way.
+              No match yet. We currently cover {CHAINS.map((c) => c.name).join(", ")} and everyday foods, with more chains on the way.
             </li>
           )}
-          {results.map((r) => (
-            <li key={r.id} className="flex items-center gap-4 px-5 py-3">
-              <Link href={itemHref(r)} className="min-w-0 flex-1">
+          {results.map((r) => {
+            const summary = (
+              <>
                 <p className="truncate font-medium text-ivory">{r.name}</p>
-                <p className="text-xs text-ivory/50">{chainName(r.chain)} · {r.serving} · {r.kcal} Cal</p>
+                <p className="text-xs text-ivory/50">{sourceName(r)} · {r.serving} · {r.kcal} Cal</p>
+                {nutrientLine(r) && <p className="text-[11px] text-ivory/40">{nutrientLine(r)}</p>}
                 <div className="mt-1.5 h-1 w-full max-w-[220px] overflow-hidden rounded-full bg-ivory/10">
                   <div className="h-full rounded-full bg-euc" style={{ width: `${(r.protein / max) * 100}%` }} />
                 </div>
-              </Link>
-              <div className="text-right">
-                <p className="tabular font-display text-2xl font-bold text-ivory">{r.protein}g</p>
-                <p className="tabular text-[11px] text-ivory/50">{density(r)}g/100 Cal</p>
-              </div>
-              <AddToTracker itemId={r.id} name={`${chainName(r.chain)} ${r.name}`} protein={r.protein} kcal={r.kcal} tone="dark" />
-            </li>
-          ))}
+              </>
+            );
+            return (
+              <li key={r.id} className="flex items-center gap-4 px-5 py-3">
+                {/* Everyday foods have no page of their own (those live on proteintracker.com.au). */}
+                {isFood(r)
+                  ? <div className="min-w-0 flex-1">{summary}</div>
+                  : <Link href={itemHref(r)} className="min-w-0 flex-1">{summary}</Link>}
+                <div className="text-right">
+                  <p className="tabular font-display text-2xl font-bold text-ivory">{r.protein}g</p>
+                  <p className="tabular text-[11px] text-ivory/50">{density(r)}g/100 Cal</p>
+                </div>
+                <AddToTracker itemId={r.id} name={trackerName(r)} protein={r.protein} kcal={r.kcal} tone="dark" />
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

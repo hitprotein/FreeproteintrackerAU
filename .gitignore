@@ -1,0 +1,5 @@
+node_modules/
+.next/
+next-env.d.ts
+# Raw FSANZ AFCD downloads for scripts/import-afcd.py (not redistributed as-is)
+afcd/

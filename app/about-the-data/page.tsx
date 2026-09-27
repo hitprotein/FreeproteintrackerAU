@@ -1,4 +1,4 @@
-import { CHAINS, COMING_SOON, formatDate } from "@/lib/data";
+import { AFCD_SOURCE, CHAINS, COMING_SOON, FOODS, formatDate } from "@/lib/data";
 
 export const metadata = {
   title: "About the Data",
@@ -24,6 +24,19 @@ export default function AboutData() {
             {c.variantNote && <p className="mt-2 text-sm text-ink/60">{c.variantNote}</p>}
           </li>
         ))}
+        <li className="rounded-2xl border border-line bg-white p-5">
+          <p className="font-semibold">Everyday foods</p>
+          <p className="mt-1 text-sm text-ink/60">
+            {FOODS.length} everyday foods (chicken, eggs, milk, Weet-Bix and so on) come from the{" "}
+            <a href={AFCD_SOURCE.url} className="underline">{AFCD_SOURCE.label}</a>, published by Food Standards Australia New
+            Zealand (FSANZ), imported {formatDate(AFCD_SOURCE.checked)}.
+          </p>
+          <p className="mt-2 text-sm text-ink/60">
+            FSANZ publishes figures per 100g; the serving sizes are ours, and every nutrient is scaled from FSANZ&apos;s per-100g
+            figure. This adapted data is shared under the same licence as the original. Everyday foods appear in search and the
+            tracker only.
+          </p>
+        </li>
       </ul>
       <p className="mt-4 text-sm text-ink/60">
         {COMING_SOON.length > 0 && <>Not yet covered: {COMING_SOON.join(", ")}. </>}A chain is only added once its official Australian nutrition figures can be sourced.

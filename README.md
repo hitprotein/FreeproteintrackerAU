@@ -13,6 +13,12 @@ Australian protein finder + free tracker. Static Next.js site, no backend: all d
 - Nando's: lib/data/nandos.ts (source: nandos.com.au/menu-item pages)
 - Update the `checked` date in lib/data/index.ts whenever figures are re-verified. Review every 3 months.
 - New chains: see data-templates/README.md. Sitemap updates automatically from the data.
+- Everyday foods: lib/data/foods.generated.ts, generated from the FSANZ AFCD Release 3 "Nutrient profiles" file by
+  scripts/import-afcd.py (put the .xlsx in ./afcd/, which is git-ignored). To add a food, add its AFCD Public Food Key
+  to WANTED in the script and re-run; never edit the generated file. These show in search and the tracker only, with
+  no pages, and are credited to FSANZ on /about-the-data.
+- Extra nutrients (fat, sat fat, carbs, sugars, fibre, sodium) are optional fields on MenuItem/Food. Only fill them
+  from the same official source as the protein figure.
 
 ## Deploy
 Same as the other sites: new GitHub repo, import into Vercel, add freeproteintracker.com.au in
