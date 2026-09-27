@@ -1,6 +1,7 @@
 import { gygItems } from "./gyg";
 import { nandosItems } from "./nandos";
 import { mcdonaldsItems } from "./mcdonalds";
+import { subwayItems } from "./subway";
 import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
 
 export * from "./types";
@@ -17,6 +18,18 @@ export const CHAINS: Chain[] = [
       checked: "2026-01-13",
     },
     variantNote: "Figures are for the standard build. Removing sauce or cheese, or adding extras, changes them. Limited-time menu items aren't included.",
+  },
+  {
+    slug: "subway",
+    name: "Subway",
+    aliases: ["subway", "sub", "subs", "footlong"],
+    blurb: "Subs, wraps and salads in their standard builds, as Subway Australia publishes them.",
+    source: {
+      label: "Subway Australia Nutrition Information guide",
+      url: "https://www.subway.com/-/media/Australia/Documents/Nutritionals/Nutrition/AUS-Nutritional-Web-Guide-May-2026.pdf",
+      checked: "2026-05-01",
+    },
+    variantNote: "Subs are 6-inch. Subway advises doubling the figures for a Footlong. Changing the bread, cheese or sauce changes them.",
   },
   {
     slug: "guzman-y-gomez",
@@ -40,9 +53,9 @@ export const CHAINS: Chain[] = [
   },
 ];
 
-export const COMING_SOON = ["KFC", "Grill'd"];
+export const COMING_SOON = ["KFC", "Grill'd", "Red Rooster"];
 
-export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...gygItems, ...nandosItems];
+export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...subwayItems, ...gygItems, ...nandosItems];
 
 export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug);
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);

@@ -8,7 +8,7 @@ import "./globals.css";
 const display = Barlow({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-display" });
 const body = Hanken_Grotesk({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-body" });
 
-const DESC = "Find the protein in Australian takeaway like McDonald's, GYG and Nando's, compare meals, and track your daily protein for free. No account needed.";
+const DESC = "Find the protein in Australian takeaway like McDonald's, Subway, GYG and Nando's, compare meals, and track your daily protein for free. No account needed.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://freeproteintracker.com.au"),
