@@ -4,6 +4,7 @@ import { mcdonaldsItems } from "./mcdonalds";
 import { subwayItems } from "./subway";
 import { kfcItems } from "./kfc";
 import { grilldItems } from "./grilld";
+import { redRoosterItems } from "./redrooster";
 import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
 
 export * from "./types";
@@ -42,6 +43,14 @@ export const CHAINS: Chain[] = [
     variantNote: "Burgers are shown on Grill'd's default bun (usually Panini). A different bun changes the figures. Grill'd publishes kilojoules; Calories are converted from them.",
   },
   {
+    slug: "red-rooster",
+    name: "Red Rooster",
+    aliases: ["red rooster", "rooster", "redrooster", "reds"],
+    blurb: "Roast and fried chicken, burgers and rolls, as Red Rooster publishes them on each item page.",
+    source: { label: "Red Rooster menu nutritional information", url: "https://www.redrooster.com.au/menu/", checked: "2026-09-27" },
+    variantNote: "Red Rooster doesn't publish figures for every item (for example tenders and the veggie burger), so those aren't listed yet.",
+  },
+  {
     slug: "subway",
     name: "Subway",
     aliases: ["subway", "sub", "subs", "footlong"],
@@ -75,9 +84,9 @@ export const CHAINS: Chain[] = [
   },
 ];
 
-export const COMING_SOON = ["Red Rooster"];
+export const COMING_SOON: string[] = [];
 
-export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...grilldItems, ...subwayItems, ...gygItems, ...nandosItems];
+export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...grilldItems, ...redRoosterItems, ...subwayItems, ...gygItems, ...nandosItems];
 
 export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug);
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);

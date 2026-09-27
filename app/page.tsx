@@ -46,7 +46,7 @@ export default function Home() {
             );
           })}
         </div>
-        <p className="mt-4 text-sm text-ink/50">Coming next: {COMING_SOON.join(", ")}.</p>
+        {COMING_SOON.length > 0 && <p className="mt-4 text-sm text-ink/50">Coming next: {COMING_SOON.join(", ")}.</p>}
       </section>
 
       <section className="border-y border-line bg-white py-16">

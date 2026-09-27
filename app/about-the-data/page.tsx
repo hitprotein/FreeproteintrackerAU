@@ -26,7 +26,7 @@ export default function AboutData() {
         ))}
       </ul>
       <p className="mt-4 text-sm text-ink/60">
-        Not yet covered: {COMING_SOON.join(", ")}. A chain is only added once its official Australian nutrition figures can be sourced.
+        {COMING_SOON.length > 0 && <>Not yet covered: {COMING_SOON.join(", ")}. </>}A chain is only added once its official Australian nutrition figures can be sourced.
       </p>
 
       <h2 className="mt-12 text-2xl">Protein per 100 Calories</h2>

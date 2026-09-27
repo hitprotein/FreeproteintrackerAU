@@ -38,7 +38,7 @@ export default function TakeawayHub() {
           })}
         </div>
         <p className="mt-8 text-sm text-ink/55">
-          Coming next: {COMING_SOON.join(", ")}. We only add a chain once we can source its official Australian figures.
+          {COMING_SOON.length > 0 && <>Coming next: {COMING_SOON.join(", ")}. </>}We only add a chain once we can source its official Australian figures.
         </p>
       </section>
     </>
