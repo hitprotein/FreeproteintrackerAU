@@ -5,7 +5,8 @@ import { subwayItems } from "./subway";
 import { kfcItems } from "./kfc";
 import { grilldItems } from "./grilld";
 import { redRoosterItems } from "./redrooster";
-import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
+import { afcdFoods } from "./foods.generated";
+import { density, type Chain, type ChainSlug, type Food, type MenuItem, type Nutrients } from "./types";
 
 export * from "./types";
 
@@ -84,6 +85,14 @@ export const CHAINS: Chain[] = [
   },
 ];
 
+/** Everyday foods (search and tracker only). Dated the day the AFCD file was downloaded and imported. */
+export const FOODS: Food[] = afcdFoods;
+export const AFCD_SOURCE = {
+  label: "FSANZ Australian Food Composition Database, Release 3",
+  url: "https://www.foodstandards.gov.au/",
+  checked: "2026-09-27",
+};
+
 export const COMING_SOON: string[] = [];
 
 export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...grilldItems, ...redRoosterItems, ...subwayItems, ...gygItems, ...nandosItems];
@@ -92,6 +101,24 @@ export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug)
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);
 export const itemsForChain = (slug: ChainSlug) => ALL_ITEMS.filter((i) => i.chain === slug);
 export const chainName = (slug: ChainSlug) => chainBySlug(slug)?.name ?? slug;
+
+export const isFood = (r: MenuItem | Food): r is Food => "afcdKey" in r;
+/** "McDonald's" for a menu item, "Everyday food" for an AFCD food. */
+export const sourceName = (r: MenuItem | Food) => (isFood(r) ? "Everyday food" : chainName(r.chain));
+/** Name to log in the tracker: chain-prefixed for takeaway, plain for everyday foods. */
+/** "Fat 5.8g · Carbs 0g · Sugars 0g · Fibre 0g · Sodium 69mg", or null when the source publishes none of them. */
+export function nutrientLine(r: Nutrients) {
+  const parts = [
+    r.fat !== undefined && `Fat ${r.fat}g`,
+    r.carbs !== undefined && `Carbs ${r.carbs}g`,
+    r.sugars !== undefined && `Sugars ${r.sugars}g`,
+    r.fibre !== undefined && `Fibre ${r.fibre}g`,
+    r.sodium !== undefined && `Sodium ${r.sodium}mg`,
+  ].filter(Boolean);
+  return parts.length ? parts.join(" · ") : null;
+}
+
+export const trackerName = (r: MenuItem | Food) => (isFood(r) ? `${r.name} (${r.serving})` : `${chainName(r.chain)} ${r.name}`);
 
 /** "Best orders" are computed from data, never hand-picked. */
 export function bestOrders(items: MenuItem[]) {

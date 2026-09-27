@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Plus, RotateCcw, X } from "lucide-react";
-import { searchItems } from "@/lib/search";
-import { chainName } from "@/lib/data";
+import { searchWithFoods } from "@/lib/search";
+import { sourceName, trackerName } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 import { MEALS, TRACKER_EVENT, addEntry, loadTracker, mealForNow, saveTracker, type Meal, type TrackerState } from "@/lib/tracker-storage";
 import CtaButton from "./CtaButton";
@@ -27,7 +27,7 @@ export default function Tracker() {
   const total = Math.round(state.entries.reduce((s, e) => s + e.protein, 0) * 10) / 10;
   const remaining = Math.max(0, Math.round((state.target - total) * 10) / 10);
   const pct = state.target > 0 ? Math.min(100, (total / state.target) * 100) : 0;
-  const results = useMemo(() => searchItems(q, 6), [q]);
+  const results = useMemo(() => searchWithFoods(q, 6), [q]);
 
   const update = (next: TrackerState) => { setState(next); saveTracker(next); };
 
@@ -71,7 +71,7 @@ export default function Tracker() {
           ))}
         </div>
         <input
-          value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search takeaway to add (e.g. GYG bowl)"
+          value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search takeaway or foods to add (e.g. GYG bowl, eggs)"
           className="mt-3 w-full rounded-xl border border-line px-4 py-3"
         />
         {q && (
@@ -80,10 +80,10 @@ export default function Tracker() {
             {results.map((r) => (
               <li key={r.id}>
                 <button type="button"
-                  onClick={() => { addEntry({ name: `${chainName(r.chain)} ${r.name}`, protein: r.protein, kcal: r.kcal, meal, itemId: r.id }); setQ(""); }}
+                  onClick={() => { addEntry({ name: trackerName(r), protein: r.protein, kcal: r.kcal, meal, itemId: r.id }); setQ(""); }}
                   className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left hover:bg-ink/[0.03]">
                   <span className="min-w-0"><span className="block truncate text-sm font-medium">{r.name}</span>
-                    <span className="text-xs text-ink/50">{chainName(r.chain)} · {r.serving}</span></span>
+                    <span className="text-xs text-ink/50">{sourceName(r)} · {r.serving}</span></span>
                   <span className="tabular shrink-0 font-display text-lg font-bold">{r.protein}g <Plus className="inline h-4 w-4" /></span>
                 </button>
               </li>
