@@ -19,7 +19,7 @@ export default function TakeawayHub() {
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-5 py-12">
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {CHAINS.map((c) => {
             const { mostProtein } = bestOrders(itemsForChain(c.slug));
             return (

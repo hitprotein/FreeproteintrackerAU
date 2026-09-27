@@ -4,11 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { searchItems } from "@/lib/search";
-import { chainName, density, itemHref } from "@/lib/data";
+import { CHAINS, chainName, density, itemHref } from "@/lib/data";
 import { trackEvent } from "@/lib/analytics";
 import AddToTracker from "./AddToTracker";
 
-const EXAMPLES = ["GYG chicken burrito", "Nando's half chicken", "nachos", "brekkie", "tenders"];
+const EXAMPLES = ["Big Mac", "GYG chicken burrito", "Nando's half chicken", "McMuffin", "tenders"];
 
 export default function SearchBox() {
   const [q, setQ] = useState("");
@@ -32,7 +32,7 @@ export default function SearchBox() {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder={`Try "GYG burrito" or "Nando's"`}
+          placeholder={`Try "Big Mac" or "GYG burrito"`}
           autoComplete="off"
           className="w-full rounded-2xl border border-ivory/15 bg-ivory/[0.06] py-4 pl-14 pr-4 text-lg text-ivory placeholder:text-ivory/40 focus:border-euc focus:outline-none"
         />
@@ -53,7 +53,7 @@ export default function SearchBox() {
         <ul className="mt-3 divide-y divide-ivory/10 overflow-hidden rounded-2xl border border-ivory/10 bg-ink/60 text-left">
           {results.length === 0 && (
             <li className="px-5 py-4 text-sm text-ivory/60">
-              No match yet. We currently cover Guzman y Gomez and Nando&apos;s, with more chains on the way.
+              No match yet. We currently cover {CHAINS.map((c) => c.name).join(", ")}, with more chains on the way.
             </li>
           )}
           {results.map((r) => (

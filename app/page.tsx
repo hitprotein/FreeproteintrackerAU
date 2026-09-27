@@ -32,7 +32,7 @@ export default function Home() {
           <h2 className="text-3xl">Takeaway protein</h2>
           <Link href="/takeaway" className="text-sm font-semibold text-euc-deep hover:underline">All chains</Link>
         </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CHAINS.map((c) => {
             const items = itemsForChain(c.slug);
             const top = [...items].sort((a, b) => b.protein - a.protein)[0];

@@ -1,10 +1,23 @@
 import { gygItems } from "./gyg";
 import { nandosItems } from "./nandos";
+import { mcdonaldsItems } from "./mcdonalds";
 import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
 
 export * from "./types";
 
 export const CHAINS: Chain[] = [
+  {
+    slug: "mcdonalds",
+    name: "McDonald's",
+    aliases: ["mcdonalds", "maccas", "macca", "mcdonald"],
+    blurb: "Burgers, chicken, McMuffins and more. Figures are for the standard build as McDonald's Australia publishes them.",
+    source: {
+      label: "McDonald's Australia Main Food Menu nutrition guide",
+      url: "https://www.mcdonalds.com/content/dam/sites/au/nfl/nutrition/PDFs/Aus%20Core%20Food%20Menu_January%202026.pdf",
+      checked: "2026-01-13",
+    },
+    variantNote: "Figures are for the standard build. Removing sauce or cheese, or adding extras, changes them. Limited-time menu items aren't included.",
+  },
   {
     slug: "guzman-y-gomez",
     name: "Guzman y Gomez",
@@ -27,9 +40,9 @@ export const CHAINS: Chain[] = [
   },
 ];
 
-export const COMING_SOON = ["McDonald's", "KFC", "Grill'd"];
+export const COMING_SOON = ["KFC", "Grill'd"];
 
-export const ALL_ITEMS: MenuItem[] = [...gygItems, ...nandosItems];
+export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...gygItems, ...nandosItems];
 
 export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug);
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);

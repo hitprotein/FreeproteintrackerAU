@@ -24,7 +24,7 @@ function editDistanceAtMost1(a: string, b: string) {
 const INDEX = ALL_ITEMS.map((item) => {
   const chain = CHAINS.find((c) => c.slug === item.chain)!;
   const text = norm([item.name, item.category, chain.name, ...chain.aliases].join(" "));
-  return { item, text, words: text.split(" ") };
+  return { item, text, words: text.split(" "), name: norm(item.name) };
 });
 
 /** Every query word must match (exactly, as a prefix, or within one typo). Ranked by match quality, then protein. */
@@ -32,7 +32,8 @@ export function searchItems(query: string, limit = 12): MenuItem[] {
   const tokens = norm(query).split(" ").filter(Boolean).map((t) => norm(SYNONYMS[t] ?? t)).join(" ").split(" ");
   if (!tokens.length || !tokens[0]) return [];
   const scored: { item: MenuItem; score: number }[] = [];
-  for (const { item, text, words } of INDEX) {
+  const phrase = tokens.join(" ");
+  for (const { item, text, words, name } of INDEX) {
     let score = 0;
     let ok = true;
     for (const t of tokens) {
@@ -42,7 +43,11 @@ export function searchItems(query: string, limit = 12): MenuItem[] {
       else if (text.includes(t)) score += 1;
       else { ok = false; break; }
     }
-    if (ok) scored.push({ item, score });
+    if (ok) {
+      if (name === phrase) score += 10; // exact item name wins ("big mac" -> Big Mac, not Double Big Mac)
+      else if (name.startsWith(phrase)) score += 4;
+      scored.push({ item, score });
+    }
   }
   return scored.sort((a, b) => b.score - a.score || b.item.protein - a.item.protein).slice(0, limit).map((s) => s.item);
 }
