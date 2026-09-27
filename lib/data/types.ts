@@ -1,4 +1,4 @@
-export type ChainSlug = "guzman-y-gomez" | "nandos" | "mcdonalds" | "subway";
+export type ChainSlug = "guzman-y-gomez" | "nandos" | "mcdonalds" | "subway" | "kfc";
 
 export interface Chain {
   slug: ChainSlug;

@@ -2,6 +2,7 @@ import { gygItems } from "./gyg";
 import { nandosItems } from "./nandos";
 import { mcdonaldsItems } from "./mcdonalds";
 import { subwayItems } from "./subway";
+import { kfcItems } from "./kfc";
 import { density, type Chain, type ChainSlug, type MenuItem } from "./types";
 
 export * from "./types";
@@ -18,6 +19,18 @@ export const CHAINS: Chain[] = [
       checked: "2026-01-13",
     },
     variantNote: "Figures are for the standard build. Removing sauce or cheese, or adding extras, changes them. Limited-time menu items aren't included.",
+  },
+  {
+    slug: "kfc",
+    name: "KFC",
+    aliases: ["kfc", "kentucky"],
+    blurb: "Chicken, burgers, twisters and bowls, as KFC Australia publishes them. Single items only, not combos or boxes.",
+    source: {
+      label: "KFC Australia Nutrition & Allergen Guide",
+      url: "https://www.kfc.com.au/nutrition-allergen",
+      checked: "2026-09-27",
+    },
+    variantNote: "KFC publishes kilojoules; Calories are converted from them. KFC's guide states its information is correct as at September 2023. Limited-time items aren't included.",
   },
   {
     slug: "subway",
@@ -53,9 +66,9 @@ export const CHAINS: Chain[] = [
   },
 ];
 
-export const COMING_SOON = ["KFC", "Grill'd", "Red Rooster"];
+export const COMING_SOON = ["Grill'd", "Red Rooster"];
 
-export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...subwayItems, ...gygItems, ...nandosItems];
+export const ALL_ITEMS: MenuItem[] = [...mcdonaldsItems, ...kfcItems, ...subwayItems, ...gygItems, ...nandosItems];
 
 export const chainBySlug = (slug: string) => CHAINS.find((c) => c.slug === slug);
 export const itemById = (id: string) => ALL_ITEMS.find((i) => i.id === id);
