@@ -21,10 +21,11 @@ function editDistanceAtMost1(a: string, b: string) {
   return edits + (a.length - i) + (b.length - j) <= 1;
 }
 
-type Entry<T> = { item: T; text: string; words: string[]; name: string };
+type Entry<T> = { item: T; text: string; words: string[]; name: string; nameWords: string[] };
 const entry = <T extends { name: string }>(item: T, extra: string[]): Entry<T> => {
   const text = norm([item.name, ...extra].join(" "));
-  return { item, text, words: text.split(" "), name: norm(item.name) };
+  const name = norm(item.name);
+  return { item, text, words: text.split(" "), name, nameWords: name.split(" ") };
 };
 
 const INDEX = ALL_ITEMS.map((item) => {
@@ -35,17 +36,22 @@ const INDEX = ALL_ITEMS.map((item) => {
 const FOOD_INDEX = FOODS.map((f) => entry(f, ["everyday food", ...(f.aliases ?? [])]));
 const INDEX_WITH_FOODS: Entry<MenuItem | Food>[] = [...INDEX, ...FOOD_INDEX];
 
-/** Every query word must match (exactly, as a prefix, or within one typo). Ranked by match quality, then protein. */
+/**
+ * Every query word must match (exactly, as a prefix, or within one typo). Ranked by match quality, then protein.
+ * A word in the item's own name beats one only in its category or chain ("fish" -> Filet-O-Fish, not McNuggets
+ * from "Chicken & Fish").
+ */
 function search<T extends { protein: number }>(index: Entry<T>[], query: string, limit: number): T[] {
   const tokens = norm(query).split(" ").filter(Boolean).map((t) => norm(SYNONYMS[t] ?? t)).join(" ").split(" ");
   if (!tokens.length || !tokens[0]) return [];
   const scored: { item: T; score: number }[] = [];
   const phrase = tokens.join(" ");
-  for (const { item, text, words, name } of index) {
+  for (const { item, text, words, name, nameWords } of index) {
     let score = 0;
     let ok = true;
     for (const t of tokens) {
-      if (words.includes(t)) score += 3;
+      if (nameWords.includes(t)) score += 4;
+      else if (words.includes(t)) score += 3;
       else if (words.some((w) => w.startsWith(t))) score += 2;
       else if (t.length >= 4 && words.some((w) => editDistanceAtMost1(w, t))) score += 1;
       else if (text.includes(t)) score += 1;
@@ -53,7 +59,8 @@ function search<T extends { protein: number }>(index: Entry<T>[], query: string,
     }
     if (ok) {
       if (name === phrase) score += 10; // exact item name wins ("big mac" -> Big Mac, not Double Big Mac)
-      else if (name.startsWith(phrase)) score += 4;
+      // Whole-word start only, or a longer fragment: "roo" shouldn't lift Rooster Roll over kangaroo ("roo").
+      else if (name.startsWith(phrase + " ") || (phrase.length >= 4 && name.startsWith(phrase))) score += 4;
       scored.push({ item, score });
     }
   }
