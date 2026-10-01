@@ -15,6 +15,7 @@ export default function Footer() {
             <li><Link href="/takeaway" className="hover:text-ivory">Takeaway protein</Link></li>
             <li><Link href="/tracker" className="hover:text-ivory">Free tracker</Link></li>
             <li><Link href="/compare" className="hover:text-ivory">Compare</Link></li>
+            <li><Link href="/kilojoules-to-calories" className="hover:text-ivory">kJ to Calories converter</Link></li>
             <li><Link href="/about-the-data" className="hover:text-ivory">About the data</Link></li>
             <li><Link href="/privacy" className="hover:text-ivory">Privacy</Link></li>
           </ul>

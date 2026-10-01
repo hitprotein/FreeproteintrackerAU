@@ -5,6 +5,7 @@ const NAV = [
   { href: "/takeaway", label: "Takeaway" },
   { href: "/tracker", label: "Tracker" },
   { href: "/compare", label: "Compare" },
+  { href: "/kilojoules-to-calories", label: "kJ to Cal" },
 ];
 
 // Server component: plain links only, no hover menus or toggles, so it works identically on touch screens.
