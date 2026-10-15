@@ -1,5 +1,12 @@
 import Link from "next/link";
 
+// Our other sites, the same list (minus this one) on every site.
+const OTHER_SITES = [
+  { name: "HitProtein", description: "The protein tracking app", href: "https://www.hitprotein.com.au" },
+  { name: "ProteinTracker", description: "Protein in Australian foods", href: "https://proteintracker.com.au" },
+  { name: "Free Protein Tracker", description: "Free online protein tracker and calculator", href: "https://freeproteintracker.com" },
+];
+
 export default function Footer() {
   return (
     <footer className="mt-24 bg-ink py-14 text-ivory">
@@ -21,10 +28,14 @@ export default function Footer() {
           </ul>
         </div>
         <div className="text-sm">
-          <p className="font-semibold">Related</p>
-          <ul className="mt-3 space-y-2 text-ivory/70">
-            <li><a href="https://freeproteintracker.com/protein-calculator" className="hover:text-ivory">Detailed protein calculator</a></li>
-            <li><a href="https://proteintracker.com.au" className="hover:text-ivory">Protein guides and food info</a></li>
+          <p className="font-semibold">Our other sites</p>
+          <ul className="mt-3 space-y-3 text-ivory/70">
+            {OTHER_SITES.map((site) => (
+              <li key={site.href}>
+                <a href={site.href} className="text-ivory/85 hover:text-ivory">{site.name}</a>
+                <span className="block text-ivory/55">{site.description}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
